@@ -80,7 +80,7 @@ namespace webBanHang.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+                return StatusCode(500, $" Server Error: {ex.Message}");
             }
         }
     }
