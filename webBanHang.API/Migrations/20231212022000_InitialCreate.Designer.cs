@@ -12,8 +12,8 @@ using webBanHang.API.Models;
 namespace webBanHang.API.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20231209151823_Initial")]
-    partial class Initial
+    [Migration("20231212022000_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

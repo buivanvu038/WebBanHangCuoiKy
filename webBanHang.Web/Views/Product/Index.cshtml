@@ -1,0 +1,25 @@
+﻿@model IEnumerable<webBanHang.Web.Models.ProductModel>
+
+<br />
+<br />
+<table class="table">
+    <tdead>
+        <tr>
+            <th>Date</th>
+            <th>Temperature C</th>
+            <th>Temperature F</th>
+            <th>Summary</th>
+        </tr>
+    </tdead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ProductId</td>
+                <td>@item.Name</td>
+                <td>@item.Price</td>
+                <td>@item.Description</td>
+            </tr>
+        }
+    </tbody>
+</table>
