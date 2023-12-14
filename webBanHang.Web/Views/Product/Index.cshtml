@@ -2,15 +2,18 @@
 
 <br />
 <br />
+
 <table class="table">
-    <tdead>
+    <thead>
         <tr>
-            <th>Date</th>
-            <th>Temperature C</th>
-            <th>Temperature F</th>
-            <th>Summary</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>StockQuantity</th> <!-- Thêm cột Quantity -->
+            <th>Action</th>
         </tr>
-    </tdead>
+    </thead>
     <tbody>
         @foreach (var item in Model)
         {
@@ -19,6 +22,26 @@
                 <td>@item.Name</td>
                 <td>@item.Price</td>
                 <td>@item.Description</td>
+                <td>@item.StockQuantity</td> <!-- Hiển thị giá trị của Quantity -->
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                </td>
+            </tr>
+        }
+
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="6">No products available.</td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td colspan="5"></td>
+                <td>
+                    <a class="button" asp-area="" asp-controller="Product" asp-action="Create">Create Product</a>
+                </td>
             </tr>
         }
     </tbody>

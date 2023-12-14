@@ -1,16 +1,23 @@
 ﻿using System.Text.Json;
 
-namespace webBanHang.Web.Helpers
+public static class HttpClientExtensions
 {
-    public static class HttpClientExtensions
+    public static async Task<T> ReadContentAsync<T>(this HttpResponseMessage response)
     {
-        public static async Task<T> ReadContentAsync<T>(this HttpResponseMessage response)
+        if (!response.IsSuccessStatusCode)
         {
-            if (response.IsSuccessStatusCode == false)
-                throw new ApplicationException($"Something went wrong calling the API: {response.ReasonPhrase}");
+            throw new ApplicationException($"Error calling the API: {response.ReasonPhrase}");
+        }
 
-            var dataAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        var dataAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
+        if (string.IsNullOrEmpty(dataAsString))
+        {
+            throw new ApplicationException("API response is empty or invalid JSON.");
+        }
+
+        try
+        {
             var result = JsonSerializer.Deserialize<T>(
                 dataAsString, new JsonSerializerOptions
                 {
@@ -18,6 +25,10 @@ namespace webBanHang.Web.Helpers
                 });
 
             return result;
+        }
+        catch (JsonException ex)
+        {
+            throw new ApplicationException($"Error deserializing JSON: {ex.Message}", ex);
         }
     }
 }

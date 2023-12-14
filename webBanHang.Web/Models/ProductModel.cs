@@ -30,3 +30,4 @@ namespace webBanHang.Web.Models
         public List<OrderItem>? OrderItems { get; set; }
     }
 }
+    

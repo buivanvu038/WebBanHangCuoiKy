@@ -1,12 +1,16 @@
-using webBanHang.Web.Services;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using System;
 using webBanHang.Web.Services.Interfaces;
+using webBanHang.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<IProduct, ProductService>(c =>
-c.BaseAddress = new Uri("https://localhost:7263/"));
+    c.BaseAddress = new Uri("https://localhost:7263/"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -32,8 +32,8 @@ namespace webBanHang.API.Controllers
                 {
                     Name = newProductDTO.Name,
                     Price = newProductDTO.Price,
-                    Description = newProductDTO.Description
-                    // Sao chép các thuộc tính từ DTO sang bảng Product
+                    Description = newProductDTO.Description,
+                    StockQuantity = newProductDTO.StockQuantity
                 };
 
                 _dbContext.Products.Add(newProduct);
@@ -80,7 +80,7 @@ namespace webBanHang.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $" Server Error: {ex.Message}");
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
     }

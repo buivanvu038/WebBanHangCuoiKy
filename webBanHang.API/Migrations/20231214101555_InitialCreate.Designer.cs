@@ -12,7 +12,7 @@ using webBanHang.API.Models;
 namespace webBanHang.API.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20231212022000_InitialCreate")]
+    [Migration("20231214101555_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,6 +24,32 @@ namespace webBanHang.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("webBanHang.API.Models.CartItem", b =>
+                {
+                    b.Property<int>("CartItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartItemId"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CartItemId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CartItems");
+                });
 
             modelBuilder.Entity("webBanHang.API.Models.Order", b =>
                 {
@@ -57,6 +83,10 @@ namespace webBanHang.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemId"));
 
+                    b.Property<string>("Feedback")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
@@ -64,6 +94,9 @@ namespace webBanHang.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Subtotal")
@@ -87,6 +120,7 @@ namespace webBanHang.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -136,6 +170,25 @@ namespace webBanHang.API.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("webBanHang.API.Models.CartItem", b =>
+                {
+                    b.HasOne("webBanHang.API.Models.Product", "Product")
+                        .WithMany("CartItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("webBanHang.API.Models.User", "User")
+                        .WithMany("CartItems")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("webBanHang.API.Models.Order", b =>
                 {
                     b.HasOne("webBanHang.API.Models.User", "User")
@@ -173,11 +226,15 @@ namespace webBanHang.API.Migrations
 
             modelBuilder.Entity("webBanHang.API.Models.Product", b =>
                 {
+                    b.Navigation("CartItems");
+
                     b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("webBanHang.API.Models.User", b =>
                 {
+                    b.Navigation("CartItems");
+
                     b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618

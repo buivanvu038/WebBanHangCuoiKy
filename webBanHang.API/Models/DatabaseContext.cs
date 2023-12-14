@@ -21,6 +21,9 @@ namespace webBanHang.API.Models
         // Bảng OrderItems trong cơ sở dữ liệu
         public DbSet<OrderItem> OrderItems { get; set; }
 
+        // Bảng CartItems trong cơ sở dữ liệu
+        public DbSet<CartItem> CartItems { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -51,6 +54,19 @@ namespace webBanHang.API.Models
                 .HasForeignKey(oi => oi.OrderId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Thiết lập mối quan hệ giữa CartItem và User, Product
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.User)
+                .WithMany(u => u.CartItems)
+                .HasForeignKey(ci => ci.UserId)
+                .IsRequired();
+
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Product)
+                .WithMany(p => p.CartItems)
+                .HasForeignKey(ci => ci.ProductId)
+                .IsRequired();
         }
     }
 }
