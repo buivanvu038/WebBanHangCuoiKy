@@ -14,7 +14,7 @@ namespace webBanHang.API.Controllers
         {
             _dbContext = dbContext;
         }
-
+        //addCard
         [HttpPost("addToCart")]
         public IActionResult AddToCart([FromBody] AddToCartDTO addToCartDTO)
         {
