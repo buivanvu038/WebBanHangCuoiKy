@@ -12,7 +12,7 @@ using webBanHang.API.Models;
 namespace webBanHang.API.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20231214101555_InitialCreate")]
+    [Migration("20231215033010_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

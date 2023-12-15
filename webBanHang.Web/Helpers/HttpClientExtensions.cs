@@ -1,34 +1,39 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
-public static class HttpClientExtensions
+namespace webBanHang.Web.Helpers
 {
-    public static async Task<T> ReadContentAsync<T>(this HttpResponseMessage response)
+    public static class HttpClientExtensions
     {
-        if (!response.IsSuccessStatusCode)
+        public static async Task<T> ReadContentAsync<T>(this HttpResponseMessage response)
         {
-            throw new ApplicationException($"Error calling the API: {response.ReasonPhrase}");
-        }
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ApplicationException($"Error calling the API: {response.ReasonPhrase}");
+            }
 
-        var dataAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            var dataAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-        if (string.IsNullOrEmpty(dataAsString))
-        {
-            throw new ApplicationException("API response is empty or invalid JSON.");
-        }
+            if (string.IsNullOrEmpty(dataAsString))
+            {
+                throw new ApplicationException("API response is empty or invalid JSON.");
+            }
 
-        try
-        {
-            var result = JsonSerializer.Deserialize<T>(
-                dataAsString, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
+            try
+            {
+                var result = JsonSerializer.Deserialize<T>(
+                    dataAsString, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
 
-            return result;
-        }
-        catch (JsonException ex)
-        {
-            throw new ApplicationException($"Error deserializing JSON: {ex.Message}", ex);
+                return result;
+            }
+            catch (JsonException ex)
+            {
+                throw new ApplicationException($"Error deserializing JSON: {ex.Message}", ex);
+            }
         }
     }
 }

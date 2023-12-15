@@ -1,5 +1,4 @@
-﻿// AddToCartDTO.cs
-namespace webBanHang.API.DTO
+﻿namespace webBanHang.API.DTO
 {
     public class AddToCartDTO
     {

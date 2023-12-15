@@ -1,4 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using webBanHang.API.DTO;
 using webBanHang.API.Models;
 
@@ -14,7 +17,7 @@ namespace webBanHang.API.Controllers
         {
             _dbContext = dbContext;
         }
-        //addCard
+
         [HttpPost("addToCart")]
         public IActionResult AddToCart([FromBody] AddToCartDTO addToCartDTO)
         {
@@ -51,6 +54,46 @@ namespace webBanHang.API.Controllers
             }
         }
 
+        [HttpGet("getCartItems/{userId}")]
+        public IActionResult GetCartItems(int userId)
+        {
+            try
+            {
+                var cartItems = _dbContext.CartItems
+                    .Include(ci => ci.Product)
+                    .Where(ci => ci.UserId == userId)
+                    .ToList();
+
+                return Ok(cartItems);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("deleteCartItem/{cartItemId}")]
+        public IActionResult DeleteCartItem(int cartItemId)
+        {
+            try
+            {
+                var cartItemToDelete = _dbContext.CartItems.Find(cartItemId);
+
+                if (cartItemToDelete == null)
+                {
+                    return NotFound($"CartItem with ID {cartItemId} not found");
+                }
+
+                _dbContext.CartItems.Remove(cartItemToDelete);
+                _dbContext.SaveChanges();
+
+                return Ok($"CartItem with ID {cartItemId} deleted successfully");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
 
         // Thêm các phương thức khác liên quan đến quản lý giỏ hàng tại đây
     }
