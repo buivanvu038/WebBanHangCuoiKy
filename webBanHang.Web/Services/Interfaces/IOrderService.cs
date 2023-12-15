@@ -6,6 +6,8 @@ namespace webBanHang.Web.Services.Interfaces
 {
     public interface IOrderService
     {
-        Task<IEnumerable<OrderModel>> GetOrder();
+        Task<IEnumerable<OrderModel>> GetOrders();
+        Task CreateOrder(OrderModel orderModel);
+        Task DeleteOrder(int orderId);
     }
 }

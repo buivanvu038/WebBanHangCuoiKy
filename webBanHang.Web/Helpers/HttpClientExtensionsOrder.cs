@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -8,19 +9,32 @@ namespace webBanHang.Web.Helpers.Order
     {
         public static async Task<T> ReadContentAsync<T>(this HttpResponseMessage response)
         {
-            if (response.IsSuccessStatusCode == false)
-                throw new ApplicationException($"Something went wrong calling the API: {response.ReasonPhrase}");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ApplicationException($"Error calling the API: {response.ReasonPhrase}");
+            }
 
             var dataAsString = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-            var result = JsonSerializer.Deserialize<T>(
-                dataAsString, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
+            if (string.IsNullOrEmpty(dataAsString))
+            {
+                throw new ApplicationException("API response is empty or invalid JSON.");
+            }
 
-            return result;
+            try
+            {
+                var result = JsonSerializer.Deserialize<T>(
+                    dataAsString, new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+                return result;
+            }
+            catch (JsonException ex)
+            {
+                throw new ApplicationException($"Error deserializing JSON: {ex.Message}", ex);
+            }
         }
     }
 }
-

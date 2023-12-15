@@ -1,16 +1,15 @@
 ﻿@model IEnumerable<webBanHang.Web.Models.OrderModel>
 
-<br />
-<br />
 <table class="table">
-    <tdead>
+    <thead>
         <tr>
-            <th>Date</th>
-            <th>Temperature C</th>
-            <th>Temperature F</th>
-            <th>Summary</th>
+            <th>ID</th>
+            <th>User ID</th>
+            <th>Order Date</th>
+            <th>Total Amount</th>
+            <th>Action</th>
         </tr>
-    </tdead>
+    </thead>
     <tbody>
         @foreach (var item in Model)
         {
@@ -19,8 +18,26 @@
                 <td>@item.UserId</td>
                 <td>@item.OrderDate</td>
                 <td>@item.TotalAmount</td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.OrderId">Delete</a>
+                </td>
             </tr>
-  
+        }
+
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="5">No orders available.</td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td colspan="4"></td>
+                <td>
+                    <a class="button" asp-area="" asp-controller="Order" asp-action="Create">Create Order</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
